@@ -13,7 +13,7 @@ const port = process.env.PORT || 3000;
 dotenv.config({ path: "./.env" });
 app.use(morgan("tiny"));
 
-app.use("/", passwordRoutes);
+app.use("/.netlify/functions/api", passwordRoutes);
 
 app.use(catchError);
 
