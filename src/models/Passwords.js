@@ -1,6 +1,6 @@
-import { model, Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const passwordsSchema = new Schema({
+const passwordsSchema = new mongoose.Schema({
   saved: [
     {
       password: { type: String, required: true },
@@ -9,4 +9,4 @@ const passwordsSchema = new Schema({
   ],
 });
 
-export default model("Passwords", passwordsSchema);
+export default mongoose.model("Passwords", passwordsSchema);

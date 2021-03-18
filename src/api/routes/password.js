@@ -1,11 +1,13 @@
 import { Router } from "express";
+import { fetchPasswords, savePassword } from "../../services/password.js";
 import validatePassword from "../middlewares/validatePassword.js";
 
 const passwordRoutes = Router();
 
 passwordRoutes.get("/", async (req, res, next) => {
   try {
-    res.send("get");
+    const savedPasswords = await fetchPasswords();
+    res.status(200).json({ savedPasswords });
   } catch (error) {
     next(error);
   }
@@ -15,7 +17,10 @@ passwordRoutes.post("/", [validatePassword], async (req, res, next) => {
   const password = req.body.password;
 
   try {
-    res.send("post");
+    const passwordHashData = await savePassword(password);
+    res
+      .status(201)
+      .json({ message: "Password saved successfuly", passwordHashData });
   } catch (error) {
     next(error);
   }

@@ -1,26 +1,10 @@
-// import crypto from "crypto";
-
-// const salt = "secret";
-// const hash = crypto.pbkdf2(
-//   "password",
-//   salt,
-//   100000,
-//   64,
-//   "sha256",
-//   (error, key) => {
-//     if (error) {
-//       throw error;
-//     }
-//     console.log(key.toString("hex"));
-//   }
-// );
-
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import morgan from "morgan";
 import passwordRoutes from "./api/routes/password.js";
 import catchError from "./api/middlewares/catchError.js";
+import Passwords from "./models/Passwords.js";
 
 const app = express();
 app.use(express.json());
@@ -38,7 +22,19 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() =>
+  .then(() => {
+    const saved = Passwords.findOne();
+    return saved;
+  })
+  .then((passwordCollection) => {
+    if (!passwordCollection) {
+      const passwords = new Passwords({
+        saved: [],
+      });
+      passwords.save();
+    }
+  })
+  .then((res) =>
     app.listen(port, () => console.log(`Server running on port ${port}`))
   )
   .catch((error) => console.log(error));
