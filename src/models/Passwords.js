@@ -1,5 +1,8 @@
 import mongoose from "mongoose";
 
+/**
+ * Saved passwords collection
+ */
 const passwordsSchema = new mongoose.Schema({
   saved: [
     {

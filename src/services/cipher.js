@@ -1,5 +1,9 @@
 import crypto, { randomBytes } from "crypto";
 
+/**
+ * Returns hashed password and generated salt
+ * @param {string} password - Password to hash.
+ */
 export const hashPassword = (password) => {
   try {
     const salt = randomBytes(256).toString("hex");
