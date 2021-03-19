@@ -25,6 +25,16 @@
 }
 ```
 
+## Post "/verify"
+### Checks for duplicates in Passwords collection
+### request body
+```JSON
+{
+	"password": "matchingPasswords",
+	"passwordVerify": "matchingPasswords"
+}
+```
+
 ## Usage
 Install packages
 ```
