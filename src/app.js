@@ -5,6 +5,7 @@ import morgan from "morgan";
 import passwordRoutes from "./api/routes/password.js";
 import catchError from "./api/middlewares/catchError.js";
 import Passwords from "./models/Passwords.js";
+import generateSalt from "./services/helpers/generateSalt.js";
 
 const app = express();
 app.use(express.json());
@@ -29,6 +30,7 @@ mongoose
   .then((passwordCollection) => {
     if (!passwordCollection) {
       const passwords = new Passwords({
+        salt: generateSalt(),
         saved: [],
       });
       passwords.save();

@@ -23,12 +23,44 @@ export const fetchPasswords = async () => {
  * @param {string} password - Password to hash.
  */
 export const savePassword = async (password) => {
-  const passwordHashData = hashPassword(password);
+  try {
+    const savedPasswords = await Passwords.findOne({});
 
-  await Passwords.findOneAndUpdate({}, { $push: { saved: passwordHashData } });
-  return passwordHashData;
+    if (!savedPasswords) {
+      throw new Error("No saved passwords");
+    }
+
+    const passwordHash = hashPassword(password, savedPasswords.salt);
+
+    await savedPasswords.update({
+      $push: { saved: { password: passwordHash } },
+    });
+    return passwordHash;
+  } catch (error) {
+    throw error;
+  }
 };
 
-export const verifuPassword = async () => {
-  return 0;
+/**
+ * Checks for duplicates in Passwords collection
+ * @param {string} password - hashed password
+ */
+export const verifyPassword = async (password) => {
+  try {
+    const savedPasswords = await Passwords.findOne({});
+
+    if (!savedPasswords) {
+      throw new Error("No saved passwords");
+    }
+
+    const passwordHash = hashPassword(password, savedPasswords.salt);
+
+    const savedPass = savedPasswords.saved.filter(
+      (pass) => pass.password === passwordHash
+    );
+
+    return savedPass;
+  } catch (error) {
+    throw error;
+  }
 };

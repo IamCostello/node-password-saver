@@ -1,5 +1,9 @@
 import { Router } from "express";
-import { fetchPasswords, savePassword } from "../../services/password.js";
+import {
+  fetchPasswords,
+  savePassword,
+  verifyPassword,
+} from "../../services/password.js";
 import validatePassword from "../middlewares/validatePassword.js";
 
 const passwordRoutes = Router();
@@ -30,7 +34,15 @@ passwordRoutes.post("/verify", [validatePassword], async (req, res, next) => {
   const password = req.body.password;
 
   try {
-    res.send("verify");
+    const passwordHashData = await verifyPassword(password);
+
+    res.status(200).json({
+      message:
+        passwordHashData.length > 0
+          ? "Password already in database"
+          : "Password not found in database",
+      passwordHashData,
+    });
   } catch (error) {
     next(error);
   }
